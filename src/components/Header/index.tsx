@@ -5,9 +5,13 @@ import Link from "next/link";
 import { BsPlusLg } from "react-icons/bs";
 import { AiFillHome } from "react-icons/ai";
 
+import { useModal } from "../../hooks/useModal";
+
 import styles from "./styles.module.scss";
 
 export const Header: FC = () => {
+  const { handleOpenModal } = useModal();
+
   return (
     <header className={styles.container}>
       <div>
@@ -29,12 +33,12 @@ export const Header: FC = () => {
             </Link>
           </li>
           <li>
-            <Link href="">
-              <a>
+            <button>
+              <a onClick={handleOpenModal}>
                 <BsPlusLg size={13} />
                 Criar
               </a>
-            </Link>
+            </button>
           </li>
         </ul>
       </nav>

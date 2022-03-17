@@ -1,9 +1,9 @@
-import { FC, createContext, useState } from "react";
+import { FC, createContext, useState, useEffect } from "react";
 
 interface IModalContextProps {
   modalIsOpen: boolean;
-  closeModal: () => void;
-  openModal: () => void;
+  handleCloseModal: () => void;
+  handleOpenModal: () => void;
 }
 
 export const ModalContext = createContext<IModalContextProps>(
@@ -13,14 +13,22 @@ export const ModalContext = createContext<IModalContextProps>(
 export const ModalContextProvider: FC = ({ children }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  function closeModal() {
+  useEffect(() => {
+    document.addEventListener("keydown", (key) => {
+      if (key.key === "Escape") setModalIsOpen(false);
+    });
+  }, []);
+  function handleCloseModal() {
     setModalIsOpen(false);
   }
-  function openModal() {
+  function handleOpenModal() {
     setModalIsOpen(true);
   }
+
   return (
-    <ModalContext.Provider value={{ closeModal, modalIsOpen, openModal }}>
+    <ModalContext.Provider
+      value={{ handleCloseModal, modalIsOpen, handleOpenModal }}
+    >
       {children}
     </ModalContext.Provider>
   );

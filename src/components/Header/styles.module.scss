@@ -15,8 +15,28 @@
     display: flex;
 
     gap: 15px;
-    font-size: 16px;
     li {
+      font-size: 16px;
+      button {
+        font-size: 16px;
+
+        a {
+          color: $gray900;
+
+          padding: 10px;
+          display: flex;
+          align-items: center;
+
+          gap: 5px;
+
+          transition: color 0.3s;
+
+          &:hover {
+            color: $purple400;
+            box-shadow: 0 5px $purple400;
+          }
+        }
+      }
       a {
         color: $gray900;
 
@@ -34,5 +54,12 @@
         }
       }
     }
+  }
+}
+
+@media (max-width: 599px) {
+  .container {
+    padding: 0;
+    flex-direction: column;
   }
 }
