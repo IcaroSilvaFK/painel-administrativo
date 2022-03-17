@@ -22,7 +22,7 @@ export const Footer: FC = () => {
       <nav className={styles.navigationFooter}>
         <ul>
           <li>
-            <Link href="">
+            <Link href="/">
               <a>
                 <AiFillHome size={16} />
                 Home

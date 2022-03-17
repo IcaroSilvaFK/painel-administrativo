@@ -1,6 +1,6 @@
 import axios from "axios";
 
-interface IDataProps {
+export interface IDataProps {
   title: string;
   description: string;
 }

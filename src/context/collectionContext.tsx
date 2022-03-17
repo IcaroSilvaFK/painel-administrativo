@@ -1,64 +1,64 @@
-import { createContext, FC, useEffect, useState, useLayoutEffect } from "react";
+import { FC, createContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
 import { api } from "../services/axios";
 
-interface ICollectionProps {
+export interface IAddNewCollectionProps {
   title: string;
+  description: string;
   id: string;
 }
 
+type Collections = Pick<IAddNewCollectionProps, "title" | "id">;
+
 interface ICollectionContextProps {
-  collections: ICollectionProps[] | null;
-  isloading: boolean;
+  collections: Collections[];
+  handleAddNewCollection: (collection: IAddNewCollectionProps) => Promise<void>;
+  isLoading: boolean;
   isError: boolean;
 }
 
-export const CollectionContext = createContext<ICollectionContextProps>(
+export const collectionContext = createContext<ICollectionContextProps>(
   {} as ICollectionContextProps
 );
 
-export const CollectionContextProvider: FC = ({ children }) => {
-  const [collections, setCollections] = useState<ICollectionProps[] | null>(
-    null
-  );
-  const [isloading, setLoading] = useState(true);
+export const CollectionCOntextProvider: FC = ({ children }) => {
+  const [collections, setCollections] = useState<Collections[]>([]);
+
+  const [isLoading, setIsLoading] = useState(false);
+
   const [isError, setIsError] = useState(false);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const store = localStorage.getItem("collections");
 
     if (store) {
       setCollections(JSON.parse(store));
+      setIsLoading(false);
     }
   }, []);
-
-  useEffect(
-    () => {
-      (async () => {
-        if (!collections) {
-          try {
-            const data = await api.get("collection");
-
-            if (data.data) {
-              setCollections(data.data);
-              setLoading(false);
-            }
-          } catch (error) {
-            setIsError(true);
-          }
-        }
-      })();
-    },
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
 
   useEffect(() => {
     localStorage.setItem("collections", JSON.stringify(collections));
   }, [collections]);
 
+  async function handleAddNewCollection(collection: IAddNewCollectionProps) {
+    try {
+      setCollections((values) => [...values, collection]);
+      api.post("collection", collection);
+      setIsLoading(false);
+      toast("Cadastrado com sucesso ⚓", { theme: "light", draggable: true });
+    } catch (error) {
+      console.log(error);
+      setIsError(true);
+    }
+  }
+  console.log(collections === null);
   return (
-    <CollectionContext.Provider value={{ collections, isError, isloading }}>
+    <collectionContext.Provider
+      value={{ collections, handleAddNewCollection, isError, isLoading }}
+    >
       {children}
-    </CollectionContext.Provider>
+    </collectionContext.Provider>
   );
 };

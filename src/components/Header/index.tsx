@@ -25,7 +25,7 @@ export const Header: FC = () => {
       <nav className={styles.navigation}>
         <ul>
           <li>
-            <Link href="">
+            <Link href="/">
               <a>
                 <AiFillHome size={16} />
                 Home
